@@ -1,5 +1,7 @@
 package com.utcn.assignment2.Assignment2;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.gson.Gson;
 import com.opencsv.CSVReader;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -10,11 +12,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Arrays;
+
 
 @Component
 public class Sender {
@@ -42,11 +43,11 @@ public class Sender {
         }
     }
 
-    @Scheduled(fixedDelay = 1000, initialDelay = 500)
+    @Scheduled(fixedDelay = 10000, initialDelay = 500)
     public void send() throws IOException {
         String[] value = csvReader.readNext();
-        final var message = new CustomMessage(LocalDateTime.now(), 1L, Float.valueOf(value[0]));
-        this.template.convertAndSend(queue.getName(), message);
+        final var message = new CustomMessage(LocalDateTime.now().toString(), 4L, Float.valueOf(value[0]));
+        this.template.convertAndSend(queue.getName(), new Gson().toJson(message));
         System.out.println(" [x] Sent '" + message + "'");
     }
 }
