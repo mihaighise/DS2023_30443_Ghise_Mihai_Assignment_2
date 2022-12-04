@@ -33,6 +33,9 @@ public class Sender {
 
     public int indexCSV = 0;
 
+    @Value("${device.id}")
+    private Long device_id;
+
     @Bean
     private void initializeCSV() {
         try{
@@ -46,7 +49,7 @@ public class Sender {
     @Scheduled(fixedDelay = 10000, initialDelay = 500)
     public void send() throws IOException {
         String[] value = csvReader.readNext();
-        final var message = new CustomMessage(LocalDateTime.now().toString(), 4L, Float.valueOf(value[0]));
+        final var message = new CustomMessage(LocalDateTime.now().toString(), device_id, Float.valueOf(value[0]));
         this.template.convertAndSend(queue.getName(), new Gson().toJson(message));
         System.out.println(" [x] Sent '" + message + "'");
     }
