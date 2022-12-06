@@ -3,6 +3,7 @@ package com.utcn.assignment2.Assignment2;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -12,6 +13,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class Assignment2Application {
 
+	@Value("${port}")
+	private Integer port;
+
+	@Value("${address}")
+	private String address;
+
 	public static void main(String[] args) {
 		SpringApplication.run(Assignment2Application.class, args);
 	}
@@ -19,7 +26,8 @@ public class Assignment2Application {
 	@Bean
 	public ConnectionFactory connectionFactory() {
 		CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
-		connectionFactory.setAddresses("localhost:5672");
+		connectionFactory.setAddresses(address);
+		connectionFactory.setPort(port);
 		connectionFactory.setUsername("guest");
 		connectionFactory.setPassword("guest");
 		return connectionFactory;
