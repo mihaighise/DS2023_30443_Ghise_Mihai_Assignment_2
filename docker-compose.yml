@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+
+  tomcat-db-api3:
+    image: assignment2
+    ports:
+       - "8083:8080"
+    environment:
+     - DEVICEID=3
